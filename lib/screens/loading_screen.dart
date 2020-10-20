@@ -26,8 +26,12 @@ void getData() async {
       var jsonData = jsonDecode(data);
       var weatherDesc = jsonDecode(data)['weather'][0]['description'];
       var temperature = jsonData['main']['temp'];
+      var condition = jsonData['weather'][0]['id'];
+      var cityName = jsonData['name'];
       print('Weather Desc is $weatherDesc');
       print('temperature is $temperature');
+      print('City is $cityName');
+      print('Condition is $condition');
     } catch (e) {
       print("parsing exception $e");
     }
