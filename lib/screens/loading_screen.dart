@@ -4,39 +4,46 @@ import 'package:flutter/material.dart';
 import '../services/location.dart';
 import 'package:http/http.dart' as http;
 
+const apiKey = 'a199167533b11e9f6141d0412b47f5a8';
+
 class LoadingScreen extends StatefulWidget {
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
 
+double _latitude;
+double _longitude;
 void getLocation() async {
   Location location = Location();
   await location.getLocation();
+  _latitude = location.latitude;
+  _longitude = location.longitude;
   print(location.latitude);
   print(location.longitude);
+  getData();
 }
 
 void getData() async {
-  var response = await http.get(
-      'https://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=b6097d289e10d714a6e88b30761fae22');
-  if (response.statusCode == 200) {
-    try {
+  try {
+    var response = await http.get(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$_latitude&lon=$_longitude&appid=$apiKey');
+    if (response.statusCode == 200) {
       var data = response.body;
       print(data);
-      var jsonData = jsonDecode(data);
+      var decodeData = jsonDecode(data);
       var weatherDesc = jsonDecode(data)['weather'][0]['description'];
-      var temperature = jsonData['main']['temp'];
-      var condition = jsonData['weather'][0]['id'];
-      var cityName = jsonData['name'];
+      var temperature = decodeData['main']['temp'];
+      var condition = decodeData['weather'][0]['id'];
+      var cityName = decodeData['name'];
       print('Weather Desc is $weatherDesc');
       print('temperature is $temperature');
       print('City is $cityName');
       print('Condition is $condition');
-    } catch (e) {
-      print("parsing exception $e");
+    } else {
+      print(response.body);
     }
-  } else {
-    print(response);
+  } catch (e) {
+    print("parsing exception $e");
   }
 }
 
@@ -49,7 +56,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    getData();
     return Scaffold();
   }
 }
