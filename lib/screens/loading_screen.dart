@@ -1,5 +1,6 @@
 import 'package:clima/services/networking.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../services/location.dart';
 import 'location_screen.dart';
@@ -33,7 +34,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       final NetworkHelper networkHelper = NetworkHelper(
           url:
-              'https://api.openweathermap.org/data/2.5/weather?lat=$_latitude&lon=$_longitude&appid=$apiKey');
+              'https://api.openweathermap.org/data/2.5/weather?lat=$_latitude&lon=$_longitude&appid=$apiKey&units=metric');
         var decodeData = await networkHelper.getData();
         var weatherDesc = decodeData['weather'][0]['description'];
         var temperature = decodeData['main']['temp'];
@@ -44,7 +45,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         print('City is $cityName');
         print('Condition is $condition');
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LocationScreen()));
+            context, MaterialPageRoute(builder: (context) => LocationScreen(weatherData: decodeData,)));
     } catch (e) {
       print(e);
     }
@@ -58,8 +59,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('Getting location');
-    getLocation();
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: SpinKitDoubleBounce(
+          color: Colors.white,
+          size: 100.0,
+        ),
+      ),
+    );
   }
 }
