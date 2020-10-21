@@ -22,11 +22,18 @@ class _LocationScreenState extends State<LocationScreen> {
   @override
   void initState() {
     super.initState();
-    _updateState(widget.weatherData);
+    _updateUI(widget.weatherData);
   }
 
-  void _updateState(weatherData) {
+  void _updateUI(weatherData) {
     setState(() {
+      if(weatherData == null) {
+        temperature = 0 ;
+        weatherIcon = 'Error';
+        weatherMessage = 'Unable to get weather data';
+        cityName = '';
+        return;
+      }
       var weatherDesc = weatherData['weather'][0]['description'];
       double temp = weatherData['main']['temp'];
       temperature = temp.toInt();
@@ -61,7 +68,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   FlatButton(
                     onPressed: () async {
                      var weatherData = await weatherModel.getLocationData();
-                     _updateState(weatherData);
+                     _updateUI(weatherData);
                     },
                     child: Icon(
                       Icons.near_me,
