@@ -15,11 +15,11 @@ class NetworkHelper {
         return jsonDecode(data);
       } else {
         print(response.body);
-        return response.body;
+        // return response.body;
       }
     } catch (e) {
       print("parsing exception $e");
-      return e;
+      // return e;
     }
   }
 }
